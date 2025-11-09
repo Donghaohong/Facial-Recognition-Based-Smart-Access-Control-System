@@ -9,6 +9,8 @@ cap = cv2.VideoCapture(0)
 # haarcascade_frontalface_alt2.xml is a detector designed for frontal faces
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml')
 
+count = 0
+
 while(True):
     # read a single frame from the carema
     # ret is a boolean result showing whether the frame is successfully read
@@ -25,15 +27,19 @@ while(True):
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
         for (x, y, w, h) in faces:
             print(x, y, w, h)
+            count += 1
+            cv2.imwrite('/Users/donghaohong/Documents/dataset/' + str(count) + '.jpg', frame[y:y+h, x:x+w])
             # cv2.rectangle('frame', 'top-left coordinate', 'bottom-right coordinate', 'color of the rectangle', 'line thickness')
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 5)
+            #cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 5)
             cv2.rectangle(gray, (x, y), (x + w, y + h), (255, 0, 0), 5)
 
         #display the frame in a window called frame
-        cv2.imshow('frame', frame)
+        #cv2.imshow('frame', frame)
         cv2.imshow('gray', gray)
     #quit the program when pressing 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    elif count == 50:
         break
 
 # close the connection with the camera device
