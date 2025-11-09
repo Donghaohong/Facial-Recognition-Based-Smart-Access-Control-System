@@ -28,7 +28,7 @@ while(True):
         for (x, y, w, h) in faces:
             print(x, y, w, h)
             count += 1
-            cv2.imwrite('/Users/donghaohong/Documents/dataset/' + str(count) + '.jpg', frame[y:y+h, x:x+w])
+            cv2.imwrite('/Users/donghaohong/Documents/dataset_bole/' + str(count) + '.jpg', frame[y:y+h, x:x+w])
             # cv2.rectangle('frame', 'top-left coordinate', 'bottom-right coordinate', 'color of the rectangle', 'line thickness')
             #cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 5)
             cv2.rectangle(gray, (x, y), (x + w, y + h), (255, 0, 0), 5)
