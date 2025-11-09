@@ -23,6 +23,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 image_dir = os.path.join(BASE_DIR, 'dataset')
 #print(image_dir)
 
+# create a local binary patterns histograms face recognizer
+recognizer = cv2.face.LBPHFaceRecognizer_create()
+
 # load a pre-trained model to detect frontal human faces
 classifier = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml")
 
@@ -61,3 +64,7 @@ for root, dirs, files in os.walk(image_dir):
 
 with open("label_pickle", "wb") as f:
     pickle.dump(label_ids, f)
+
+# train the recognizer using the dataset
+recognizer.train(x_train, np.array(y_labels))
+recognizer.save('trainer.yml')
