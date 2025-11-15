@@ -32,6 +32,8 @@ classifier = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalf
 # os.walk() recursively traverse the entire folder tree
 for root, dirs, files in os.walk(image_dir):
     for file in files:
+        if not file.lower().endswith(('.png', '.jpg', '.jpeg')):
+            continue
         # get the absolute path for each image in the dataset
         path = os.path.join(root, file)
         #print(path)
