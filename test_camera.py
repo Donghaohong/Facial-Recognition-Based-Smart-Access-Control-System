@@ -29,7 +29,8 @@ while(True):
         for (x, y, w, h) in faces:
             print(x, y, w, h)
             count += 1
-            save_dir = '/Users/donghaohong/Documents/Facial_rcg/dataset/Donghao'
+            person_name = "Donghao"
+            save_dir = os.path.join("dataset", person_name)
             os.makedirs(save_dir, exist_ok=True)
 
             cv2.imwrite(os.path.join(save_dir, f"{count}.jpg"), frame[y:y + h, x:x + w])
