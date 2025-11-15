@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 
 # create an object for the camera
 cap = cv2.VideoCapture(0)
@@ -28,7 +29,11 @@ while(True):
         for (x, y, w, h) in faces:
             print(x, y, w, h)
             count += 1
-            cv2.imwrite('/Users/donghaohong/Documents/dataset_bole/' + str(count) + '.jpg', frame[y:y+h, x:x+w])
+            save_dir = '/Users/donghaohong/Documents/Facial_rcg/dataset/Donghao'
+            os.makedirs(save_dir, exist_ok=True)
+
+            cv2.imwrite(os.path.join(save_dir, f"{count}.jpg"), frame[y:y + h, x:x + w])
+            #cv2.imwrite('/Users/donghaohong/Documents/Facial_rcg/dataset/100_dh/' + str(count) + '.jpg', frame[y:y+h, x:x+w])
             # cv2.rectangle('frame', 'top-left coordinate', 'bottom-right coordinate', 'color of the rectangle', 'line thickness')
             #cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 5)
             cv2.rectangle(gray, (x, y), (x + w, y + h), (255, 0, 0), 5)
@@ -39,7 +44,7 @@ while(True):
     #quit the program when pressing 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-    elif count == 50:
+    elif count == 200:
         break
 
 # close the connection with the camera device
