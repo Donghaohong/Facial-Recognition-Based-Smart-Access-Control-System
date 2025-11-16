@@ -2,8 +2,9 @@ import cv2
 import numpy as np
 import pickle
 
-# load a pre-trained model to detect frontal human faces
-classifier = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml")
+modelFile = "res10_300x300_ssd_iter_140000.caffemodel"
+configFile = "deploy.prototxt"
+net = cv2.dnn.readNetFromCaffe(configFile, modelFile)
 
 # create a local binary patterns histograms face recognizer
 recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -21,11 +22,6 @@ with open("label_pickle", 'rb') as f:
 # create an object for the camera
 cap = cv2.VideoCapture(0)
 
-# Haar cascade model (a type of machine learning based detector)
-# cv2.data.haarcascades gives the path to the OpenCV's built-in pretrained XML models
-# haarcascade_frontalface_alt2.xml is a detector designed for frontal faces
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml')
-
 while(True):
     # read a single frame from the carema
     # ret is a boolean result showing whether the frame is successfully read
@@ -39,17 +35,39 @@ while(True):
         # scan the image at different scales to find faces at different distances to the camera
         # scale factor decides how much the image size is reduced at each scale
         # minNeighbour decides the number of rectangles must be kept to be recognized as a face
-        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-        for (x, y, w, h) in faces:
-            #print(x, y, w, h)
-            gray_roi = gray[y:y+h, x:x+w]
-            id_, conf = recognizer.predict(gray_roi)
-            #print(id_, conf)
-            if conf >= 50:
-                #print(labels[id_])
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                cv2.putText(frame, str(labels[id_]), (x, y-15), cv2.FONT_HERSHEY_SIMPLEX, 3, (255,0,0), 2)
-            cv2.imshow('Result', frame)
+        # ---- DNN face detection ----
+        (h, w) = frame.shape[:2]
+        blob = cv2.dnn.blobFromImage(frame, 1.0, (300, 300),
+                                     (104.0, 177.0, 123.0))
+        net.setInput(blob)
+        detections = net.forward()
+
+        for i in range(detections.shape[2]):
+            confidence = detections[0, 0, i, 2]
+            if confidence > 0.6:
+                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+                (x1, y1, x2, y2) = box.astype("int")
+
+                gray_roi = gray[y1:y2, x1:x2]
+
+                if gray_roi.size == 0:
+                    continue
+
+                id_, conf = recognizer.predict(gray_roi)
+                print(labels[id_], conf)
+
+                # 总是画框
+                cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+
+                # 判断名字或 Unknown
+                name = labels[id_] if conf <= 40 else "Unknown"
+
+                cv2.putText(frame, name, (x1, y1 - 15),
+                            cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 0, 0), 2)
+
+                #break
+
+    cv2.imshow('Result', frame)
 
     #quit the program when pressing 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
