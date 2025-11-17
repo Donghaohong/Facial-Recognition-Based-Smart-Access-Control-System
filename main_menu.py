@@ -21,11 +21,11 @@ def draw_menu():
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
     cv2.rectangle(img, (100,230), (700,310), (255,255,255), 3)
-    cv2.putText(img, "Face Recognition", (170, 285),
+    cv2.putText(img, "Face Recognition", (180, 285),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
     cv2.rectangle(img, (100,340), (700,420), (255,255,255), 3)
-    cv2.putText(img, "Admin Login", (250, 395),
+    cv2.putText(img, "Admin Login", (180, 395),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
     return img
