@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 from password_enter import password_screen
+from face_unlock import face_unlock_screen
+from admin_login import admin_login_screen
+from admin_panel import admin_panel_screen
 
 clicked_button = None
 
@@ -56,12 +59,33 @@ def main():
 
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 cv2.destroyAllWindows()
-                return  # 完全退出程序
+                return
 
-        cv2.destroyWindow("Menu")  # 先关闭菜单界面
+        cv2.destroyWindow("Menu")
 
         if clicked_button == "password":
             password_screen()
+
+        elif clicked_button == "face":
+            face_unlock_screen()
+
+        elif clicked_button == "admin":
+            result = admin_login_screen()
+            if result == "OK":
+                action = admin_panel_screen()
+
+                if action == "change_pw":
+                    from change_password import change_password_screen
+                    change_password_screen()
+
+                elif action == "add_face":
+                    print("TODO: Add Face Page")
+
+                elif action == "delete_face":
+                    print("TODO: Delete Face Page")
+
+                elif action == "back":
+                    pass
 
 if __name__ == "__main__":
     main()
