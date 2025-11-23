@@ -10,24 +10,24 @@ clicked = None
 result_message = None
 
 buttons = {
-    "1": (150,150,250,230),
-    "2": (300,150,400,230),
-    "3": (450,150,550,230),
+    "1": (240,120,320,184),
+    "2": (360,120,440,184),
+    "3": (480,120,560,184),
 
-    "4": (150,250,250,330),
-    "5": (300,250,400,330),
-    "6": (450,250,550,330),
+    "4": (240,200,320,264),
+    "5": (360,200,440,264),
+    "6": (480,200,560,264),
 
-    "7": (150,350,250,430),
-    "8": (300,350,400,430),
-    "9": (450,350,550,430),
+    "7": (240,280,320,344),
+    "8": (360,280,440,344),
+    "9": (480,280,560,344),
 
-    "C": (150,450,250,530),
-    "0": (300,450,400,530),
-    "OK":(450,450,550,530)
+    "C": (240,360,320,424),
+    "0": (360,360,440,424),
+    "OK":(480,360,560,424)
 }
 
-back_button = (20, 20, 150, 70)
+back_button = (16, 16, 120, 56)
 
 def ensure_password_file():
     if not os.path.exists("password.txt"):
@@ -44,24 +44,24 @@ def verify_password(input_pw):
     return input_pw == load_password()
 
 def draw_keypad():
-    img = np.zeros((600,800,3), dtype=np.uint8)
+    img = np.zeros((480,800,3), dtype=np.uint8)
 
     (bx1, by1, bx2, by2) = back_button
     cv2.rectangle(img, (bx1,by1), (bx2,by2), (255,255,255), 2)
     cv2.putText(img, "BACK", (bx1+10, by1+35),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
-    cv2.putText(img, "ENTER PASSWORD", (200, 50),
+    cv2.putText(img, "ENTER PASSWORD", (200, 40),
                 cv2.FONT_HERSHEY_SIMPLEX, 1.6, (0, 255, 255), 3)
 
     display = "*" * len(password_buffer)
-    cv2.putText(img, display, (330, 100),
+    cv2.putText(img, display, (330, 80),
                 cv2.FONT_HERSHEY_SIMPLEX, 1.6, (0, 255, 0), 3)
 
     if result_message is not None:
         text = "Correct!" if result_message == "correct" else "Wrong Password"
 
-        PASSWORD_Y = 150
+        PASSWORD_Y = 120
         text_y = PASSWORD_Y - 20
 
         text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1.2, 3)[0]
@@ -76,13 +76,13 @@ def draw_keypad():
         cv2.rectangle(img, (x1,y1), (x2,y2), (255,255,255), 3)
 
         if text == "OK":
-            text_x = x1 + 15
+            text_x = x1 + 12
             font_scale = 1.6
         else:
-            text_x = x1 + 35
+            text_x = x1 + 30
             font_scale = 1.8
 
-        cv2.putText(img, text, (text_x, y1 + 65),
+        cv2.putText(img, text, (text_x, y1 + 50),
                     cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255,255,255), 3)
 
     return img
@@ -111,7 +111,7 @@ def password_screen():
     message_start_time = None
 
     cv2.namedWindow("Password", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("Password", 800, 600)
+    cv2.resizeWindow("Password", 800, 480)
     cv2.setMouseCallback("Password", mouse_callback)
 
     while True:
